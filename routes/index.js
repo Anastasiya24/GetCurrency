@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 var oxr = require("open-exchange-rates");
 var fx = require("money");
-var Money = require("moneyjs");
 const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
 
@@ -15,12 +14,18 @@ saveCurrency = async (req, res, next) => {
     if (error) {
       return res.status(404).json({ error });
     }
+    const USD = oxr.rates.USD;
+    const EUR = oxr.rates.EUR;
+    const GBP = oxr.rates.GBP;
     const newCurrency = new Currency({
       provider: "oxr",
       currencies: {
-        USD: new Money(oxr.rates.USD, Money.USD),
-        EUR: new Money(oxr.rates.EUR, Money.EUR),
-        GBP: new Money(oxr.rates.GBP, Money.GBP)
+        USDEUR: USD / EUR,
+        USDGBP: USD / GBP,
+        EURUSD: EUR / USD,
+        EURGBP: EUR / GBP,
+        GBPUSD: GBP / USD,
+        GBPEUR: GBP / EUR
       }
     });
     await newCurrency.save();
@@ -42,9 +47,13 @@ currencyService = async (req, res) => {
   let currentCurrency = await getCurrency(provider);
   return res.status(200).render("index", {
     now: currentCurrency.date,
-    oxr_USD: currentCurrency.currencies.USD,
-    oxr_EUR: currentCurrency.currencies.EUR,
-    oxr_GBP: currentCurrency.currencies.GBP
+    provider: currentCurrency.provider,
+    oxr_USDEUR: currentCurrency.currencies.USDEUR,
+    oxr_USDGBP: currentCurrency.currencies.USDGBP,
+    oxr_EURUSD: currentCurrency.currencies.EURUSD,
+    oxr_EURGBP: currentCurrency.currencies.EURGBP,
+    oxr_GBPUSD: currentCurrency.currencies.GBPUSD,
+    oxr_GBPEUR: currentCurrency.currencies.GBPEUR
   });
 };
 

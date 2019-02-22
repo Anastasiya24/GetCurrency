@@ -1,27 +1,35 @@
 const mongoose = require("mongoose");
-require("mongoose-money");
 const Schema = mongoose.Schema;
 
 const CurrencySchema = new Schema({
   provider: {
     type: String,
-    required: true,
-    index: true
+    required: true
   },
   currencies: {
-    USD: {
-      type: Schema.Types.Money,
-      required: true,
-      index: true
-    },
-    EUR: {
-      type: Schema.Types.Money,
+    USDEUR: {
+      type: Number,
       required: true
     },
-    GBP: {
-      type: Schema.Types.Money,
-      required: true,
-      index: true
+    USDGBP: {
+      type: Number,
+      required: true
+    },
+    EURUSD: {
+      type: Number,
+      required: true
+    },
+    EURGBP: {
+      type: Number,
+      required: true
+    },
+    GBPUSD: {
+      type: Number,
+      required: true
+    },
+    GBPEUR: {
+      type: Number,
+      required: true
     }
   },
   date: {
