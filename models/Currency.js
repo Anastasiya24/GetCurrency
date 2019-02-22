@@ -5,20 +5,23 @@ const Schema = mongoose.Schema;
 const CurrencySchema = new Schema({
   provider: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   currencies: {
     USD: {
-      type: Number,
-      required: true
+      type: Schema.Types.Money,
+      required: true,
+      index: true
     },
     EUR: {
-      type: Number,
+      type: Schema.Types.Money,
       required: true
     },
     GBP: {
-      type: Number,
-      required: true
+      type: Schema.Types.Money,
+      required: true,
+      index: true
     }
   },
   date: {

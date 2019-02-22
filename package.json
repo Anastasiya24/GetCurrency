@@ -15,6 +15,7 @@
     "http-errors": "~1.6.2",
     "lodash": "^4.17.11",
     "money": "^0.2.0",
+    "moneyjs": "^0.3.0",
     "mongoose": "^5.4.14",
     "mongoose-money": "^0.2.0",
     "morgan": "~1.9.0",
