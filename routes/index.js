@@ -6,7 +6,7 @@ const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
 
 const APP_ID = "cea0d1b9d40e4364b7ddf70163ff1cbd";
-const currentDate = new Date();
+const currentDate = "2013-02-22T12:41:51.254Z"; //new Date();
 
 saveCurrency = async (req, res, next) => {
   let provider = "oxr";
@@ -31,7 +31,8 @@ saveCurrency = async (req, res, next) => {
           EURGBP: EUR / GBP,
           GBPUSD: GBP / USD,
           GBPEUR: GBP / EUR
-        }
+        },
+        date: currentDate
       });
       await newCurrency.save();
     });
@@ -40,15 +41,15 @@ saveCurrency = async (req, res, next) => {
 };
 
 getCurrency = async (provider, day) => {
-  // let toDate = moment(day).format("YYYY-MM-DD").subtract(1, 'days');
-  // let laterDate = moment(day).format("YYYY-MM-DD").add(1, 'days');
+  let toDate = moment(day).subtract(1, 'days').format("YYYY-MM-DD");
+  let laterDate = moment(day).add(1, 'days').format("YYYY-MM-DD");
+  console.log("toDate: ", toDate);
+  console.log("laterDate: ", laterDate);
   return await Currency.findOne({
     provider: provider,
     date: {
-      // $gte: toDate,
-      // $lte: laterDate
-      $gte: "2019-02-21",
-      $lte: "2019-02-23"
+      $gte: toDate,
+      $lte: laterDate
     }
   });
 };
