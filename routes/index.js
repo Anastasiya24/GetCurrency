@@ -6,7 +6,7 @@ const Currency = require("../models/Currency");
 
 const APP_ID = "cea0d1b9d40e4364b7ddf70163ff1cbd";
 
-async function saveCurrency(req, res, next) {
+saveCurrency = async (req, res, next) => {
   // Do you have a request on this day? 12pm today
   await oxr.set({ app_id: APP_ID });
   await oxr.latest(async function(error) {
@@ -14,31 +14,34 @@ async function saveCurrency(req, res, next) {
       console.log(error.toString());
       return false;
     }
-    req.now = new Date(oxr.timestamp).toUTCString();
-    req.provider = "oxr";
-    req.oxr_USD = oxr.rates.USD;
-    req.oxr_EUR = oxr.rates.EUR;
-    req.oxr_GBP = oxr.rates.GBP;
     const newCurrency = new Currency({
       provider: "oxr",
-      currencies: [
-        { USD: oxr.rates.USD, EUR: oxr.rates.EUR, GBP: oxr.rates.GBP }
-      ]
+      currencies: {
+        USD: oxr.rates.USD,
+        EUR: oxr.rates.EUR,
+        GBP: oxr.rates.GBP
+      }
     });
     await newCurrency.save();
     next();
   });
-}
+};
 
-async function currencyService(req, res) {
+currencyService = async (req, res) => {
   // Get a currency with a provider's priority
-  res.render("index", {
-    now: req.now,
-    oxr_USD: req.oxr_USD,
-    oxr_EUR: req.oxr_EUR,
-    oxr_GBP: req.oxr_GBP
+  
+  let currentCurrency = await Currency.findOne(
+    { provider: "oxr" },
+    {},
+    { sort: { date: -1 } }
+  );
+  res.status(200).render("index", {
+    now: currentCurrency.date,
+    oxr_USD: currentCurrency.currencies.USD,
+    oxr_EUR: currentCurrency.currencies.EUR,
+    oxr_GBP: currentCurrency.currencies.GBP
   });
-}
+};
 
 router.get("/", saveCurrency, currencyService);
 

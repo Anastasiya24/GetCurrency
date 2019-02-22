@@ -8,12 +8,15 @@
     "server": "nodemon ./bin/www"
   },
   "dependencies": {
+    "async": "^2.6.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
+    "lodash": "^4.17.11",
     "money": "^0.2.0",
     "mongoose": "^5.4.14",
+    "mongoose-money": "^0.2.0",
     "morgan": "~1.9.0",
     "nodemon": "^1.18.10",
     "open-exchange-rates": "^0.3.0",
