@@ -4,9 +4,10 @@ const oxr = require("open-exchange-rates");
 const moment = require("moment");
 const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
-const saveCurrency = require("../service/oxr");
+const oxrProviderSaveCurrency = require("../service/oxr");
+const currencyLayerProviderSaveCurrency = require("../service/cl");
 
-const currentDate = "2018-01-24";
+const currentDate = "2019-02-25";
 
 currencyMiddleware = async (req, res, next) => {
   let day = moment(currentDate).format("YYYY-MM-DD");
@@ -16,7 +17,8 @@ currencyMiddleware = async (req, res, next) => {
   if (currentCurrency) next();
   else {
     // Get a currency with a provider's priority
-    saveCurrency(day, next);
+    // oxrProviderSaveCurrency(day, res, next);
+    currencyLayerProviderSaveCurrency(day, res, next);
   }
 };
 
@@ -32,7 +34,7 @@ getCurrency = async (day, o) => {
     .format("YYYY-MM-DD");
 
   return await Currency.findOne({
-    provider: provider,
+    // provider: provider,
     date: {
       $gte: toDate,
       $lte: laterDate
