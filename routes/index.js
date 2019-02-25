@@ -6,7 +6,7 @@ const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
 
 const APP_ID = "cea0d1b9d40e4364b7ddf70163ff1cbd";
-const currentDate = "2014-04-22T12:41:51.254Z"; //new Date();
+const currentDate = "2018-09-19";
 
 saveCurrency = async (req, res, next) => {
   let provider = "oxr";
@@ -15,7 +15,7 @@ saveCurrency = async (req, res, next) => {
   if (currentCurrency) next();
   else {
     await oxr.set({ app_id: APP_ID });
-    await oxr.historical(day, async function(error) {
+    let result = await oxr.historical(day, async function(error) {
       if (error) {
         return res.status(404).json({ error });
       }
@@ -35,14 +35,14 @@ saveCurrency = async (req, res, next) => {
         date: currentDate
       });
       let currency = await newCurrency.save();
-      console.log("currency1: ", currency);
-      req.currency = currency
+      console.log("saveCurrency: ", currency);
     });
-    next();
+    if (result) next();
   }
 };
 
 getCurrency = async (provider, day) => {
+  console.log("getCurrency! ");
   let toDate = moment(day)
     .subtract(1, "days")
     .format("YYYY-MM-DD");
@@ -61,10 +61,8 @@ getCurrency = async (provider, day) => {
 currencyService = async (req, res) => {
   // Get a currency with a provider's priority
   let provider = "oxr";
-  console.log('currency: ', req.currency);
-  
+  console.log("currencyService: ", req.currency);
   let currentCurrency = await getCurrency(provider, currentDate);
-  // let currentCurrency = req.currency;
   res.status(200).render("index", {
     now: currentCurrency.date,
     provider: currentCurrency.provider,
