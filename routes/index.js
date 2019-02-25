@@ -5,7 +5,7 @@ const moment = require("moment");
 const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
 const oxrProviderSaveCurrency = require("../service/oxr");
-const currencyLayerProviderSaveCurrency = require("../service/cl");
+const currencyLayerProviderSaveCurrency = require("../service/currency-layer");
 
 const currentDate = "2019-02-25";
 
