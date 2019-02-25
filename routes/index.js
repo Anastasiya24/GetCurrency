@@ -11,21 +11,16 @@ const currentDate = "2019-02-25";
 
 currencyMiddleware = async (req, res, next) => {
   let day = moment(currentDate).format("YYYY-MM-DD");
-  let currentCurrency = await getCurrency(currentDate, "m");
-  console.log("currencyMiddleware");
-
+  let currentCurrency = await getCurrency(currentDate);
   if (currentCurrency) next();
   else {
     // Get a currency with a provider's priority
-    // oxrProviderSaveCurrency(day, res, next);
     currencyLayerProviderSaveCurrency(day, res, next);
+    // oxrProviderSaveCurrency(day, res, next);
   }
 };
 
-getCurrency = async (day, o) => {
-  // Get a currency with a provider's priority
-  let provider = "oxr";
-  console.log("getCurrency! ", o);
+getCurrency = async day => {
   let toDate = moment(day)
     .subtract(1, "days")
     .format("YYYY-MM-DD");
@@ -33,18 +28,23 @@ getCurrency = async (day, o) => {
     .add(1, "days")
     .format("YYYY-MM-DD");
 
-  return await Currency.findOne({
-    // provider: provider,
-    date: {
-      $gte: toDate,
-      $lte: laterDate
-    }
-  });
+  let result, provider;
+  for (let i = 0; i < listOfCurrencyPriority.length; i++) {
+    provider = listOfCurrencyPriority[i].provider;
+    result = await Currency.findOne({
+      provider: provider,
+      date: {
+        $gte: toDate,
+        $lte: laterDate
+      }
+    });
+    if (result) break;
+  }
+  return result;
 };
 
 currencyService = async (req, res) => {
-  let currentCurrency = await getCurrency(currentDate, "s");
-  console.log("currencyService");
+  let currentCurrency = await getCurrency(currentDate);
   res.status(200).render("index", {
     now: currentCurrency.date,
     provider: currentCurrency.provider,

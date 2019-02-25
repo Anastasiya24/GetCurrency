@@ -6,7 +6,6 @@ const APP_ID = "cea0d1b9d40e4364b7ddf70163ff1cbd";
 saveCurrency = async (day, res, next) => {
   oxr.set({ app_id: APP_ID });
   oxr.historical(day, async function(error) {
-    console.log("historical");
     if (error) {
       return res.status(404).json({ error });
     }
