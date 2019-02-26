@@ -6,18 +6,14 @@ const endpoint = "historical";
 const access_key = "6f74e40f7402d34287a524ec46099db5";
 const apiURL = "http://apilayer.net/api/";
 
-async function currencyLayerService(day, next) {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(`${apiURL}${endpoint}?date=${day}&access_key=${access_key}`)
-      .then(response => {
-        if (response.data.ErrorCode) reject(Error(response.data.ErrorCode));
-        resolve(saveCurrency(day, next, response.data.quotes));
-      });
-  });
-}
+currencyLayerService = async (day, next) => {
+  let response = await axios.get(
+    `${apiURL}${endpoint}?date=${day}&access_key=${access_key}`
+  );
+  if (response) saveCurrencyCL(day, next, response.data.quotes);
+};
 
-saveCurrency = async (day, next, result) => {
+saveCurrencyCL = async (day, next, result) => {
   let currencies = {
     USDEUR: result.USDEUR,
     USDGBP: result.USDGBP,

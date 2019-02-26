@@ -6,16 +6,12 @@ const endpoint = "historical";
 const access_key = "cea0d1b9d40e4364b7ddf70163ff1cbd";
 const apiURL = "https://openexchangerates.org/api/";
 
-async function oxrService(day, next) {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(`${apiURL}${endpoint}/${day}.json?app_id=${access_key}`)
-      .then(response => {
-        if (response.data.ErrorCode) reject(Error(response.data.ErrorCode));
-        resolve(saveCurrency(day, next, response.data.rates));
-      });
-  });
-}
+oxrService = async (day, next) => {
+  let response = await axios.get(
+    `${apiURL}${endpoint}/${day}.json?app_id=${access_key}`
+  );
+  if (response) saveCurrency(day, next, response.data.rates);
+};
 
 saveCurrency = async (day, next, result) => {
   let currencies = {
