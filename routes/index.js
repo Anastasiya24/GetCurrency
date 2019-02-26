@@ -45,32 +45,34 @@ getCurrency = async day => {
 };
 
 conversionCurrency = (sum, oldCurrency, newCurrency, currentCurrency) => {
-  switch (oldCurrency) {
-    case "USD":
-      switch (newCurrency) {
-        case "EUR":
-          return sum * currentCurrency.USDEUR;
-        case "GBP":
-          return sum * currentCurrency.USDGBP;
-      }
-      break;
-    case "EUR":
-      switch (newCurrency) {
-        case "USD":
-          return sum * currentCurrency.EURUSD;
-        case "GBP":
-          return sum * currentCurrency.EURGBP;
-      }
-      break;
-    case "GBP":
-      switch (newCurrency) {
-        case "USD":
-          return sum * currentCurrency.GBPUSD;
-        case "EUR":
-          return sum * currentCurrency.GBPEUR;
-      }
-      break;
-  }
+  let convertCurrency = `${oldCurrency}${newCurrency}`;
+  return sum * currentCurrency[convertCurrency];
+  // switch (oldCurrency) {
+  //   case "USD":
+  //     switch (newCurrency) {
+  //       case "EUR":
+  //         return sum * currentCurrency.USDEUR;
+  //       case "GBP":
+  //         return sum * currentCurrency.USDGBP;
+  //     }
+  //     break;
+  //   case "EUR":
+  //     switch (newCurrency) {
+  //       case "USD":
+  //         return sum * currentCurrency.EURUSD;
+  //       case "GBP":
+  //         return sum * currentCurrency.EURGBP;
+  //     }
+  //     break;
+  //   case "GBP":
+  //     switch (newCurrency) {
+  //       case "USD":
+  //         return sum * currentCurrency.GBPUSD;
+  //       case "EUR":
+  //         return sum * currentCurrency.GBPEUR;
+  //     }
+  //     break;
+  // }
 };
 
 currencyService = async (req, res) => {
