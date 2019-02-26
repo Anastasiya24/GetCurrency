@@ -3,13 +3,13 @@ const router = express.Router();
 const moment = require("moment");
 const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
-// const oxrProviderSaveCurrency = require("../service/oxr");
 const currencyLayerProviderSaveCurrency = require("../service/currency-layer");
 
-const currentDate = "2019-02-25";
+// INPUT DATA
+const currentDate = "2019-02-26";
 const initialSum = 100;
-const initialCurrency = "USD";
-const finallyCurrency = "EUR";
+const initialCurrency = "GBP";
+const finallyCurrency = "EUR"; 
 
 currencyMiddleware = async (req, res, next) => {
   let day = moment(currentDate).format("YYYY-MM-DD");
@@ -46,25 +46,25 @@ conversionCurrency = (sum, oldCurrency, newCurrency, currentCurrency) => {
     case "USD":
       switch (newCurrency) {
         case "EUR":
-          return sum * currentCurrency.EURUSD;
+          return sum * currentCurrency.USDEUR;
         case "GBP":
-          return sum * currentCurrency.GBPUSD;
+          return sum * currentCurrency.USDGBP;
       }
       break;
     case "EUR":
       switch (newCurrency) {
         case "USD":
-          return sum * currentCurrency.USDEUR;
+          return sum * currentCurrency.EURUSD;
         case "GBP":
-          return sum * currentCurrency.GBPEUR;
+          return sum * currentCurrency.EURGBP;
       }
       break;
     case "GBP":
       switch (newCurrency) {
         case "USD":
-          return sum * currentCurrency.USDGBP;
+          return sum * currentCurrency.GBPUSD;
         case "EUR":
-          return sum * currentCurrency.EURGBP;
+          return sum * currentCurrency.GBPEUR;
       }
       break;
   }
