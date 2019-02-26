@@ -6,11 +6,12 @@ const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
 const currencyLayerService = require("../service/currency-layer-service");
 const oxrService = require("../service/oxr-service");
 
-// INPUT DATA
+/* INPUT DATA */
 const currentDate = "2019-02-26";
 const initialSum = 100;
 const initialCurrency = "USD";
 const finallyCurrency = "EUR";
+/* */
 
 currencyMiddleware = async (req, res, next) => {
   let day = moment(currentDate).format("YYYY-MM-DD");
@@ -80,14 +81,24 @@ currencyService = async (req, res) => {
     finallyCurrency,
     currentCurrency.currencies
   );
-  res.status(200).render("index", {
-    now: currentCurrency.date,
-    provider: currentCurrency.provider,
-    initialSum,
-    finalSum,
-    initialCurrency,
-    finallyCurrency
-  });
+  res
+    .status(200)
+    // .json({
+    //   now: currentCurrency.date,
+    //   provider: currentCurrency.provider,
+    //   initialSum,
+    //   finalSum,
+    //   initialCurrency,
+    //   finallyCurrency
+    // })
+    .render("index", {
+      now: currentCurrency.date,
+      provider: currentCurrency.provider,
+      initialSum,
+      finalSum,
+      initialCurrency,
+      finallyCurrency
+    });
 };
 
 router.get("/", currencyMiddleware, currencyService);
