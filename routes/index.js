@@ -1,23 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const oxr = require("open-exchange-rates");
 const moment = require("moment");
 const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
-const oxrProviderSaveCurrency = require("../service/oxr");
+// const oxrProviderSaveCurrency = require("../service/oxr");
 const currencyLayerProviderSaveCurrency = require("../service/currency-layer");
 
 const currentDate = "2019-02-25";
+const initialSum = 100;
+const initialCurrency = "USD";
+const finallyCurrency = "EUR";
 
 currencyMiddleware = async (req, res, next) => {
   let day = moment(currentDate).format("YYYY-MM-DD");
   let currentCurrency = await getCurrency(currentDate);
   if (currentCurrency) next();
-  else {
-    // Get a currency with a provider's priority
-    currencyLayerProviderSaveCurrency(day, res, next);
-    // oxrProviderSaveCurrency(day, res, next);
-  }
+  else currencyLayerProviderSaveCurrency(day, res, next);
 };
 
 getCurrency = async day => {
@@ -43,17 +41,50 @@ getCurrency = async day => {
   return result;
 };
 
+conversionCurrency = (sum, oldCurrency, newCurrency, currentCurrency) => {
+  switch (oldCurrency) {
+    case "USD":
+      switch (newCurrency) {
+        case "EUR":
+          return sum * currentCurrency.EURUSD;
+        case "GBP":
+          return sum * currentCurrency.GBPUSD;
+      }
+      break;
+    case "EUR":
+      switch (newCurrency) {
+        case "USD":
+          return sum * currentCurrency.USDEUR;
+        case "GBP":
+          return sum * currentCurrency.GBPEUR;
+      }
+      break;
+    case "GBP":
+      switch (newCurrency) {
+        case "USD":
+          return sum * currentCurrency.USDGBP;
+        case "EUR":
+          return sum * currentCurrency.EURGBP;
+      }
+      break;
+  }
+};
+
 currencyService = async (req, res) => {
   let currentCurrency = await getCurrency(currentDate);
+  let finalSum = conversionCurrency(
+    initialSum,
+    initialCurrency,
+    finallyCurrency,
+    currentCurrency.currencies
+  );
   res.status(200).render("index", {
     now: currentCurrency.date,
     provider: currentCurrency.provider,
-    oxr_USDEUR: currentCurrency.currencies.USDEUR,
-    oxr_USDGBP: currentCurrency.currencies.USDGBP,
-    oxr_EURUSD: currentCurrency.currencies.EURUSD,
-    oxr_EURGBP: currentCurrency.currencies.EURGBP,
-    oxr_GBPUSD: currentCurrency.currencies.GBPUSD,
-    oxr_GBPEUR: currentCurrency.currencies.GBPEUR
+    initialSum,
+    finalSum,
+    initialCurrency,
+    finallyCurrency
   });
 };
 
