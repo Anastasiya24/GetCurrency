@@ -3,19 +3,21 @@ const router = express.Router();
 const moment = require("moment");
 const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
-const currencyLayerProviderSaveCurrency = require("../service/currency-layer");
+const currencyLayerService = require("../service/currency-layer-service");
+const oxrService = require("../service/oxr-service");
 
 // INPUT DATA
 const currentDate = "2019-02-26";
 const initialSum = 100;
-const initialCurrency = "GBP";
-const finallyCurrency = "EUR"; 
+const initialCurrency = "USD";
+const finallyCurrency = "EUR";
 
 currencyMiddleware = async (req, res, next) => {
   let day = moment(currentDate).format("YYYY-MM-DD");
   let currentCurrency = await getCurrency(currentDate);
   if (currentCurrency) next();
-  else currencyLayerProviderSaveCurrency(day, res, next);
+  // else currencyLayerService(day, next);
+  else oxrService(day, next);
 };
 
 getCurrency = async day => {
