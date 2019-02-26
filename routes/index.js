@@ -4,7 +4,7 @@ const moment = require("moment");
 const Currency = require("../models/Currency");
 const listOfCurrencyPriority = require("../assets/priorityOfCurrencyProviders");
 const currencyLayerService = require("../service/currency-layer-service");
-const oxrService = require("../service/oxr-service");
+// const oxrService = require("../service/oxr-service");
 
 // INPUT DATA
 const currentDate = "2019-02-26";
@@ -16,8 +16,8 @@ currencyMiddleware = async (req, res, next) => {
   let day = moment(currentDate).format("YYYY-MM-DD");
   let currentCurrency = await getCurrency(currentDate);
   if (currentCurrency) next();
-  // else currencyLayerService(day, next);
-  else oxrService(day, next);
+  else currencyLayerService(day, next);
+  // else oxrService(day, next);
 };
 
 getCurrency = async day => {
