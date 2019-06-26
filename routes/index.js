@@ -103,6 +103,27 @@ currencyService = async (req, res) => {
     });
 };
 
+getCurrencies = async (req, res) => {
+  let currentCurrency = await getCurrency(currentDate);
+  let finalSum = conversionCurrency(
+    initialSum,
+    initialCurrency,
+    finallyCurrency,
+    currentCurrency.currencies
+  );
+  res
+    .status(200)
+    .json({
+      now: currentCurrency.date,
+      provider: currentCurrency.provider,
+      initialSum,
+      finalSum,
+      initialCurrency,
+      finallyCurrency
+    })
+};
+
 router.get("/", currencyMiddleware, currencyService);
+router.get("/get-currency", currencyMiddleware, getCurrencies);
 
 module.exports = router;

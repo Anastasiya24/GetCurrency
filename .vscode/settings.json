@@ -1,0 +1,5 @@
+{
+    "appService.showBuildDuringDeployPrompt": false,
+    "appService.defaultWebAppToDeploy": "/subscriptions/8df49dad-a390-4b94-939f-491a98426287/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/currency-convert",
+    "appService.deploySubpath": ""
+}
