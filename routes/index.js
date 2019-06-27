@@ -8,7 +8,7 @@ const oxrService = require("../service/oxr-service");
 
 /* INPUT DATA */
 const currentDate = "2019-02-26";
-const initialSum = 100;
+const initialSum = process.env.INITIAL_SUM;
 const initialCurrency = "USD";
 const finallyCurrency = "EUR";
 /* */
@@ -47,32 +47,6 @@ getCurrency = async day => {
 conversionCurrency = (sum, oldCurrency, newCurrency, currentCurrency) => {
   let convertCurrency = `${oldCurrency}${newCurrency}`;
   return sum * currentCurrency[convertCurrency];
-  // switch (oldCurrency) {
-  //   case "USD":
-  //     switch (newCurrency) {
-  //       case "EUR":
-  //         return sum * currentCurrency.USDEUR;
-  //       case "GBP":
-  //         return sum * currentCurrency.USDGBP;
-  //     }
-  //     break;
-  //   case "EUR":
-  //     switch (newCurrency) {
-  //       case "USD":
-  //         return sum * currentCurrency.EURUSD;
-  //       case "GBP":
-  //         return sum * currentCurrency.EURGBP;
-  //     }
-  //     break;
-  //   case "GBP":
-  //     switch (newCurrency) {
-  //       case "USD":
-  //         return sum * currentCurrency.GBPUSD;
-  //       case "EUR":
-  //         return sum * currentCurrency.GBPEUR;
-  //     }
-  //     break;
-  // }
 };
 
 currencyService = async (req, res) => {
@@ -83,24 +57,14 @@ currencyService = async (req, res) => {
     finallyCurrency,
     currentCurrency.currencies
   );
-  res
-    .status(200)
-    // .json({
-    //   now: currentCurrency.date,
-    //   provider: currentCurrency.provider,
-    //   initialSum,
-    //   finalSum,
-    //   initialCurrency,
-    //   finallyCurrency
-    // })
-    .render("index", {
-      now: currentCurrency.date,
-      provider: currentCurrency.provider,
-      initialSum,
-      finalSum,
-      initialCurrency,
-      finallyCurrency
-    });
+  res.status(200).render("index", {
+    now: currentCurrency.date,
+    provider: currentCurrency.provider,
+    initialSum,
+    finalSum,
+    initialCurrency,
+    finallyCurrency
+  });
 };
 
 getCurrencies = async (req, res) => {
@@ -111,16 +75,15 @@ getCurrencies = async (req, res) => {
     finallyCurrency,
     currentCurrency.currencies
   );
-  res
-    .status(200)
-    .json({
-      now: currentCurrency.date,
-      provider: currentCurrency.provider,
-      initialSum,
-      finalSum,
-      initialCurrency,
-      finallyCurrency
-    })
+  res.status(200).json({
+    now: currentCurrency.date,
+    provider: currentCurrency.provider,
+    initialSum,
+    finalSum,
+    initialCurrency,
+    finallyCurrency,
+    state: "Ok"
+  });
 };
 
 router.get("/", currencyMiddleware, currencyService);
