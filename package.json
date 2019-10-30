@@ -20,7 +20,7 @@
     "moment": "^2.24.0",
     "money": "^0.2.0",
     "moneyjs": "^0.3.0",
-    "mongoose": "^5.4.14",
+    "mongoose": "^5.7.5",
     "mongoose-money": "^0.2.0",
     "morgan": "~1.9.0",
     "nodemon": "^1.18.10",
