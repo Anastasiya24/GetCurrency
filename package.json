@@ -17,7 +17,7 @@
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "lodash": "^4.17.11",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "money": "^0.2.0",
     "moneyjs": "^0.3.0",
     "mongoose": "^5.4.14",
